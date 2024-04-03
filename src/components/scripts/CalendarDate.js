@@ -2,6 +2,9 @@ export default {
   data() {
     return {
       data: [],
+      modal: false,
+      modalDay: null,
+      modalDayName: null,
     };
   },
   created() {
@@ -22,7 +25,7 @@ export default {
     let date = firstDate;
     let month = this.getYearMonth(date);
     // data
-    this.data = [this.getDateData(date, currentDay)];
+    this.data = [this.getDateData(date, currentDay, m)];
     // eslint-disable-next-line no-constant-condition
     while (true) {
       date = new Date(date.getTime() + 24 * 60 * 60 * 1000);
@@ -31,9 +34,8 @@ export default {
       if (month > currentMonth && date.getDay() === 1) {
         break;
       }
-      this.data.push(this.getDateData(date, currentDay));
+      this.data.push(this.getDateData(date, currentDay, m));
     }
-    console.table(this.data);
   },
   methods: {
     getYearMonth(date) {
@@ -46,7 +48,7 @@ export default {
 
       return [year, month, day].join("-");
     },
-    getDateData(date, today) {
+    getDateData(date, today, month) {
       const format = this.formatDate(date);
       const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -55,7 +57,16 @@ export default {
         day: date.getDate(),
         dayName: days[date.getDay()],
         today: format === today,
+        activeMonth: month === date.getMonth(),
       };
+    },
+    showModal(data) {
+      this.modal = !this.modal;
+      this.modalDay = data.day;
+      this.modalDayName = data.dayName;
+    },
+    closeModal() {
+      this.modal = !this.modal;
     },
   },
 };
