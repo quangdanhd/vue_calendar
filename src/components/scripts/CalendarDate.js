@@ -1,6 +1,7 @@
 export default {
   data() {
     return {
+      currentDay: null,
       data: [],
       monthYear: null,
       // modal
@@ -9,21 +10,28 @@ export default {
       // store
       storeKey: "CALENDAR_STORE",
       storedNotes: {},
+      // active month
+      activeMonth: null,
     };
   },
   created() {
+    const today = new Date();
+    this.currentDay = this.formatDate(today);
+    this.activeMonth = this.firstDayOfMonth(today);
+    console.log(this.activeMonth);
+    // get data
     this.getCalendar();
   },
   methods: {
     getCalendar() {
       this.storedNotes = this.getStore();
       // today
-      const today = new Date();
+      const today = new Date(this.activeMonth);
+      // month view
       this.getMonthYear(today);
-      // const today = new Date("2024-07-10");
+      // y m
       const y = today.getFullYear();
       const m = today.getMonth();
-      const currentDay = this.formatDate(today);
       // first date of month
       const first = new Date(y, m, 1);
       // first date of calendar
@@ -35,7 +43,7 @@ export default {
       let date = firstDate;
       let month = this.getYearMonth(date);
       // data
-      this.data = [this.getDateData(date, currentDay)];
+      this.data = [this.getDateData(date)];
       // eslint-disable-next-line no-constant-condition
       while (true) {
         date = new Date(date.getTime() + 24 * 60 * 60 * 1000);
@@ -44,9 +52,9 @@ export default {
         if (month > currentMonth && date.getDay() === 1) {
           break;
         }
-        this.data.push(this.getDateData(date, currentDay));
+        this.data.push(this.getDateData(date));
       }
-      console.table(this.data);
+      // console.table(this.data);
     },
     getStore() {
       let store = localStorage.getItem(this.storeKey);
@@ -76,7 +84,14 @@ export default {
 
       return [year, month, day].join("-");
     },
-    getDateData(date, today) {
+    firstDayOfMonth(date) {
+      const y = date.getFullYear();
+      const m = date.getMonth();
+
+      const first = new Date(y, m, 1);
+      return this.formatDate(first);
+    },
+    getDateData(date) {
       const format = this.formatDate(date);
       const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -89,7 +104,7 @@ export default {
         date: format,
         day: date.getDate(),
         dayName: days[date.getDay()],
-        isToday: format === today,
+        isToday: format === this.currentDay,
         monthName: date.toLocaleString("en", { month: "short" }),
         note: note,
       };
@@ -111,6 +126,24 @@ export default {
       // close modal
       this.closeModal();
       // refresh
+      this.getCalendar();
+    },
+    previousMonth() {
+      const date = new Date(this.activeMonth);
+      this.activeMonth = this.firstDayOfMonth(
+        new Date(date.setMonth(date.getMonth() - 1))
+      );
+      console.log(this.activeMonth);
+      // get data
+      this.getCalendar();
+    },
+    nextMonth() {
+      const date = new Date(this.activeMonth);
+      this.activeMonth = this.firstDayOfMonth(
+        new Date(date.setMonth(date.getMonth() + 1))
+      );
+      console.log(this.activeMonth);
+      // get data
       this.getCalendar();
     },
   },

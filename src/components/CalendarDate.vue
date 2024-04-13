@@ -1,6 +1,6 @@
 <template>
   <div id="calendar-month">
-    <button>
+    <button @click="previousMonth">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -16,7 +16,7 @@
       </svg>
     </button>
     <span>{{ monthYear }}</span>
-    <button>
+    <button @click="nextMonth">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
