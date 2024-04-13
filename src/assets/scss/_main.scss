@@ -66,10 +66,28 @@ body {
 
     &-month {
       margin-top: 25px;
-      text-align: center;
       color: #fff;
       font-size: 2rem;
       font-family: "Rubik", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span {
+        margin: 0 25px;
+      }
+      button {
+        border: none;
+        background: none;
+        color: #fff;
+        cursor: pointer;
+        transition: all ease 0.5s;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+      }
     }
 
     #calendar-dates {
