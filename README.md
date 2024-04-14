@@ -1,3 +1,4 @@
+![Screenshot](public/screenshot.jpg)
 # vue_calendar
 
 ## Project setup
